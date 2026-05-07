@@ -1,10 +1,16 @@
 import { cppPack } from '../packs/cpp/index.js';
 import { rustPack } from '../packs/rust/index.js';
+import { goPack } from '../packs/go/index.js';
+import { zigPack } from '../packs/zig/index.js';
+import { cPack } from '../packs/c/index.js';
 import type { LanguagePack } from '../packs/cpp/index.js';
 
 const PACKS: Record<string, LanguagePack> = {
   cpp: cppPack,
   rust: rustPack,
+  go: goPack,
+  zig: zigPack,
+  c: cPack,
 };
 
 export function getAvailablePacks(): string[] {

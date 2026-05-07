@@ -46,7 +46,7 @@ export function resolveGateCommand(packName: string, gateCmd: string): string {
   return gateCmd;
 }
 
-export async function runGates(packs: string[]): Promise<GateReport> {
+export async function runGates(packs: string[], customGates?: Record<string, string>): Promise<GateReport> {
   const report: GateReport = {
     timestamp: new Date().toISOString(),
     success: true,
@@ -101,6 +101,46 @@ export async function runGates(packs: string[]): Promise<GateReport> {
 
     if (!report.success) {
       break;
+    }
+  }
+
+  // Run custom gates (defined in .sysvibe.toml [gates.custom])
+  if (report.success && customGates && Object.keys(customGates).length > 0) {
+    console.log();
+    log.heading('Running custom gates...');
+
+    for (const [gateName, gateCmd] of Object.entries(customGates)) {
+      const spinner = log.createSpinner(`[custom] ${gateName}...`).start();
+
+      const result = await runCommandAsync(gateCmd);
+
+      const gateResult: GateResult = {
+        name: gateName,
+        packName: 'custom',
+        success: result.success,
+        durationMs: result.durationMs,
+        stdout: result.stdout,
+        stderr: result.stderr,
+        command: gateCmd,
+      };
+
+      report.results.push(gateResult);
+
+      const durationStr = (result.durationMs / 1000).toFixed(2);
+
+      if (result.success) {
+        spinner.succeed(`[custom] ${gateName} passed (${durationStr}s)`);
+      } else {
+        spinner.fail(`[custom] ${gateName} failed (${durationStr}s)`);
+        report.success = false;
+
+        console.log('');
+        log.error('Gate output:');
+        console.log(result.stderr || result.stdout || '(No output)');
+        console.log('');
+
+        break;
+      }
     }
   }
 

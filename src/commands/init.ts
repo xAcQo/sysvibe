@@ -97,10 +97,18 @@ export function registerInitCommand(program: Command): void {
       // Scaffold project template if requested
       if (options.template) {
         console.log('');
-        const projectName = basename(process.cwd());
-        log.info(`Scaffolding ${getPackDisplayName(options.template)} project: ${projectName}`);
-        const result = scaffoldProject(options.template, projectName, process.cwd());
-        printScaffoldReport(result);
+        if (selectedPacks.length > 1) {
+          log.warn('Multi-language combo detected — template scaffolding disabled.');
+          log.info('Combo projects inject merged rules for all selected languages,');
+          log.info('but scaffolding is only supported for single-language projects.');
+          log.info(`Selected packs: ${selectedPacks.map(getPackDisplayName).join(', ')}`);
+          log.info('Set up your project structure manually.');
+        } else {
+          const projectName = basename(process.cwd());
+          log.info(`Scaffolding ${getPackDisplayName(options.template)} project: ${projectName}`);
+          const result = scaffoldProject(options.template, projectName, process.cwd());
+          printScaffoldReport(result);
+        }
       }
 
       // Summary

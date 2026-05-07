@@ -16,6 +16,7 @@ export interface GatesConfig {
   skip?: string[];
   cpp?: CppGateConfig;
   rust?: RustGateConfig;
+  custom?: Record<string, string>;
 }
 
 export interface AgentConfig {

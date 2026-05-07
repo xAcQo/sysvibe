@@ -1,0 +1,21 @@
+linters:
+  enable:
+    - errcheck
+    - govet
+    - ineffassign
+    - staticcheck
+    - typecheck
+    - unused
+    - gosec
+    - gocyclo
+    - gocritic
+    - bodyclose
+    - nilerr
+  disable-all: true
+
+linters-settings:
+  gocyclo:
+    min-complexity: 15
+
+issues:
+  exclude-use-default: false

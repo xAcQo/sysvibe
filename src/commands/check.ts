@@ -30,8 +30,8 @@ export function registerCheckCommand(program: Command): void {
         }
       }
 
-      // Run gates sequentially
-      const gateReport = await runGates(packs);
+      // Run gates sequentially (includes custom gates from .sysvibe.toml)
+      const gateReport = await runGates(packs, config.gates.custom);
       
       // Save output for auto-fix
       saveGateReport(gateReport);
