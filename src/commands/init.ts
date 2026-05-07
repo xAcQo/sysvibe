@@ -8,6 +8,7 @@ import { generateAgentConfig } from '../core/config-gen.js';
 import { checkToolchain, printToolchainReport } from '../core/toolchain.js';
 import { getPackChoices, getPackDisplayName, isValidPack } from '../core/pack-manager.js';
 import { scaffoldProject, printScaffoldReport, templateExists } from '../core/template-engine.js';
+import { generateCiConfig, CiProvider } from '../core/ci-gen.js';
 
 export function registerInitCommand(program: Command): void {
   program
@@ -15,7 +16,8 @@ export function registerInitCommand(program: Command): void {
     .description('Initialize SysVibe in your project')
     .argument('[languages...]', 'Language packs to activate (e.g., cpp rust)')
     .option('--template <pack>', 'Scaffold a project from a language template (e.g., cpp, rust)')
-    .action(async (languages: string[], options: { template?: string }) => {
+    .option('--ci <provider>', 'Scaffold CI configuration (github, gitlab)')
+    .action(async (languages: string[], options: { template?: string, ci?: string }) => {
       log.banner('INITIALIZING');
 
       // Check if already initialized
@@ -36,6 +38,13 @@ export function registerInitCommand(program: Command): void {
           log.error(`Template files not found for: ${options.template}`);
           process.exit(1);
         }
+      }
+
+      // Validate CI flag early
+      if (options.ci && !['github', 'gitlab'].includes(options.ci.toLowerCase())) {
+        log.error(`Unsupported CI provider: "${options.ci}"`);
+        log.info('Available providers: github, gitlab');
+        process.exit(1);
       }
 
       // Get language packs
@@ -111,6 +120,17 @@ export function registerInitCommand(program: Command): void {
         }
       }
 
+      // Generate CI config if requested
+      if (options.ci) {
+        console.log('');
+        const provider = options.ci.toLowerCase() as CiProvider;
+        log.info(`Scaffolding CI configuration for: ${provider}`);
+        const success = generateCiConfig(provider, process.cwd());
+        if (success) {
+          log.success(`CI pipeline generated successfully!`);
+        }
+      }
+
       // Summary
       console.log('');
       log.banner('INITIALIZED');
@@ -126,6 +146,9 @@ export function registerInitCommand(program: Command): void {
         } else {
           log.info(`Template: ${getPackDisplayName(options.template)} project scaffolded`);
         }
+      }
+      if (options.ci) {
+        log.info(`CI Pipeline: ${options.ci} scaffolded`);
       }
       console.log('');
       log.info('Next: sysvibe check (coming in Phase 3)');

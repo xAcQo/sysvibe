@@ -3,6 +3,9 @@ import { rustPack } from '../packs/rust/index.js';
 import { goPack } from '../packs/go/index.js';
 import { zigPack } from '../packs/zig/index.js';
 import { cPack } from '../packs/c/index.js';
+import { csharpPack } from '../packs/csharp/index.js';
+import { swiftPack } from '../packs/swift/index.js';
+import { javaPack } from '../packs/java/index.js';
 import type { LanguagePack } from '../packs/cpp/index.js';
 
 const PACKS: Record<string, LanguagePack> = {
@@ -11,6 +14,9 @@ const PACKS: Record<string, LanguagePack> = {
   go: goPack,
   zig: zigPack,
   c: cPack,
+  csharp: csharpPack,
+  swift: swiftPack,
+  java: javaPack,
 };
 
 export function getAvailablePacks(): string[] {

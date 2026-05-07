@@ -1,0 +1,27 @@
+name: SysVibe Quality Gates
+
+on:
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  sysvibe-check:
+    runs-on: ubuntu-latest
+    # TIP: If your project uses an exotic toolchain, change the runs-on
+    # or specify a container image here. Example:
+    # container: my-custom-clang-image:latest
+
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install SysVibe
+        run: npm install -g sysvibe
+
+      - name: Run Quality Gates
+        run: sysvibe check

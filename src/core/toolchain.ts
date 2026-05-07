@@ -63,6 +63,40 @@ const TOOLCHAIN_REQUIREMENTS: Record<string, ToolRequirement[]> = {
       displayName: 'rustc',
     },
   ],
+  csharp: [
+    {
+      cmd: 'dotnet',
+      versionFlag: '--version',
+      installCmd: 'https://dotnet.microsoft.com/download',
+      required: true,
+      displayName: 'dotnet',
+    },
+  ],
+  swift: [
+    {
+      cmd: 'swift',
+      versionFlag: '--version',
+      installCmd: 'https://swift.org/download/',
+      required: true,
+      displayName: 'swift',
+    },
+    {
+      cmd: 'swiftlint',
+      versionFlag: 'version',
+      installCmd: 'brew install swiftlint',
+      required: false,
+      displayName: 'swiftlint',
+    },
+  ],
+  java: [
+    {
+      cmd: 'javac',
+      versionFlag: '-version',
+      installCmd: 'https://adoptium.net/',
+      required: true,
+      displayName: 'javac',
+    },
+  ],
 };
 
 export function checkToolchain(packs: string[]): ToolchainReport {

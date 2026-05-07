@@ -1,0 +1,14 @@
+stages:
+  - quality
+
+sysvibe-check:
+  stage: quality
+  image: node:20
+  # TIP: If your project requires specific compilers (like a custom clang),
+  # replace `node:20` with your custom image that has both your toolchain AND nodejs installed.
+  script:
+    - npm install -g sysvibe
+    - sysvibe check
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_PIPELINE_SOURCE == "web"
