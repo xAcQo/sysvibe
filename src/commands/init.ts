@@ -121,7 +121,11 @@ export function registerInitCommand(program: Command): void {
       log.info(`Config: .sysvibe.toml`);
       log.info(`Agent: ${getAgentDisplayName(agent.type)} → ${agent.configFile}`);
       if (options.template) {
-        log.info(`Template: ${getPackDisplayName(options.template)} project scaffolded`);
+        if (selectedPacks.length > 1) {
+          log.info(`Template: scaffolding skipped (combo project)`);
+        } else {
+          log.info(`Template: ${getPackDisplayName(options.template)} project scaffolded`);
+        }
       }
       console.log('');
       log.info('Next: sysvibe check (coming in Phase 3)');
